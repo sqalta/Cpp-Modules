@@ -8,9 +8,11 @@ all: $(NAME)
 $(NAME): $(SRCS)
 	$(CC) $(FLAGS) $(SRCS) -o $(NAME)
 
-clean: $(NAME)
-	rm $(NAME)
+clean:
+	rm -f $(NAME)
 
 fclean: clean
 
 re: fclean all
+
+.PHONY: clean fclean all
