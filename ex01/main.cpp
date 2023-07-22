@@ -23,4 +23,5 @@ int main()
 		else
 			std::cout << "Wrong command. Please try again. " << std::endl; 
 	}
+	return (0);
 }

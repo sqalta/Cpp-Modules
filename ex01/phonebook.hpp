@@ -9,15 +9,15 @@ class Phonebook
 {
 	private:
 		Contact contact[8];
-		int				id;
 		int				id_flag;
+		int				id;
 	public:
 		Phonebook();
 		void add(Contact contact);
 		void search(void);
 		void exit(void);
-		void printContact(int flag);
-		void rotateId(void);
+		void printAllContact(void);
+		void displayContactInfo(int contactId);
 };
 
 #endif

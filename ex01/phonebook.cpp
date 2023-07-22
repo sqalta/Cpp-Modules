@@ -50,7 +50,6 @@ void Phonebook::add(Contact contact)
 	std::cout << "The contact has been registered." << std::endl;
 	std::cout << "Press enter to continue." << std::endl;
 	getline(std::cin, input);
-	std::cout << this->id << std::endl;
 	this->contact[this->id] = contact;
 	this->id += 1;
 	if (this->id == 8)
@@ -60,74 +59,76 @@ void Phonebook::add(Contact contact)
 	}
 }
 
-void Phonebook::printContact(int flag)
+void Phonebook::printAllContact(void)
 {
-	if (flag == -1)
+	int flag1;
+
+	flag1 = this->id;
+	if (this->id_flag == 1)
+		flag1 = 8;
+	for(int i = 0; i < flag1; i++)
 	{
-		if (this->id_flag == 1)
-			this->id = 8;
-		for(int i = 0; i < this->id; i++)
-		{
-			if (i >= 10)
-				std::cout << std::setw(10) << i << "." << "|";
-			else
-				std::cout << std::setw(10) << i << "|";
-			if (this->contact[i].getFirstName().length() >= 10)
-				std::cout << std::setw(10) << this->contact[i].getFirstName().substr(0,9) << "." << "|";
-			else
-				std::cout << std::setw(10) << this->contact[i].getFirstName() << "|";
-			if (this->contact[i].getLastName().length() >= 10)
-				std::cout << std::setw(10) << this->contact[i].getLastName().substr(0,9) << "." << "|";
-			else
-				std::cout << std::setw(10) << this->contact[i].getLastName() << "|";
-			if (this->contact[i].getNickName().length() >= 10)
-				std::cout << std::setw(10) << this->contact[i].getNickName().substr(0,9) << "." << "|";
-			else
-				std::cout << std::setw(10) << this->contact[i].getNickName() << "|";
-			std::cout << std::endl;
-		}
+		if (i >= 10)
+			std::cout << std::setw(10) << i << "." << "|";
+		else
+			std::cout << std::setw(10) << i << "|";
+		if (this->contact[i].getFirstName().length() >= 10)
+			std::cout << std::setw(10) << this->contact[i].getFirstName().substr(0,9) << "." << "|";
+		else
+			std::cout << std::setw(10) << this->contact[i].getFirstName() << "|";
+		if (this->contact[i].getLastName().length() >= 10)
+			std::cout << std::setw(10) << this->contact[i].getLastName().substr(0,9) << "." << "|";
+		else
+			std::cout << std::setw(10) << this->contact[i].getLastName() << "|";
+		if (this->contact[i].getNickName().length() >= 10)
+			std::cout << std::setw(10) << this->contact[i].getNickName().substr(0,9) << "." << "|";
+		else
+			std::cout << std::setw(10) << this->contact[i].getNickName() << "|";
+		std::cout << std::endl;
+	}
+}
+
+void Phonebook::displayContactInfo(int contactId)
+{
+	if ((contactId <= 7) && (contactId < this->id || this->id_flag))
+	{
+		if (this->id >= 10)
+			std::cout << std::setw(10) << contactId << "." << "|";
+		else
+			std::cout << std::setw(10) << contactId << "|";
+		if (this->contact[contactId].getFirstName().length() >= 10)
+			std::cout << std::setw(10) << this->contact[contactId].getFirstName().substr(0,9) << "." << "|";
+		else
+			std::cout << std::setw(10) << this->contact[contactId].getFirstName() << "|";
+		if (this->contact[contactId].getLastName().length() >= 10)
+			std::cout << std::setw(10) << this->contact[contactId].getLastName().substr(0,9) << "." << "|";
+		else
+			std::cout << std::setw(10) << this->contact[contactId].getLastName() << "|";
+		if (this->contact[contactId].getNickName().length() >= 10)
+			std::cout << std::setw(10) << this->contact[contactId].getNickName().substr(0,9) << "." << "|";
+		else
+			std::cout << std::setw(10) << this->contact[contactId].getNickName() << "|";
+		if (this->contact[contactId].getPhoneNumber().length() >= 10)
+			std::cout << std::setw(10) << this->contact[contactId].getPhoneNumber().substr(0,9) << "." << "|";
+		else
+			std::cout << std::setw(10) << this->contact[contactId].getPhoneNumber() << "|";
+		if (this->contact[contactId].getDarkestSecret().length() >= 10)
+			std::cout << std::setw(10) << this->contact[contactId].getDarkestSecret().substr(0,9) << "." << "|";
+		else
+			std::cout << std::setw(10) << this->contact[contactId].getDarkestSecret() << "|";
+		std::cout << std::endl;
 	}
 	else
-	{
-		if (flag < this->id)
-		{
-			if (this->id >= 10)
-				std::cout << std::setw(10) << flag << "." << "|";
-			else
-				std::cout << std::setw(10) << flag << "|";
-			if (this->contact[flag].getFirstName().length() >= 10)
-				std::cout << std::setw(10) << this->contact[flag].getFirstName().substr(0,9) << "." << "|";
-			else
-				std::cout << std::setw(10) << this->contact[flag].getFirstName() << "|";
-			if (this->contact[flag].getLastName().length() >= 10)
-				std::cout << std::setw(10) << this->contact[flag].getLastName().substr(0,9) << "." << "|";
-			else
-				std::cout << std::setw(10) << this->contact[flag].getLastName() << "|";
-			if (this->contact[flag].getNickName().length() >= 10)
-				std::cout << std::setw(10) << this->contact[flag].getNickName().substr(0,9) << "." << "|";
-			else
-				std::cout << std::setw(10) << this->contact[flag].getNickName() << "|";
-			if (this->contact[flag].getPhoneNumber().length() >= 10)
-				std::cout << std::setw(10) << this->contact[flag].getPhoneNumber().substr(0,9) << "." << "|";
-			else
-				std::cout << std::setw(10) << this->contact[flag].getPhoneNumber() << "|";
-			if (this->contact[flag].getDarkestSecret().length() >= 10)
-				std::cout << std::setw(10) << this->contact[flag].getDarkestSecret().substr(0,9) << "." << "|";
-			else
-				std::cout << std::setw(10) << this->contact[flag].getDarkestSecret() << "|";
-			std::cout << std::endl;
-		}
-		else
-			std::cout << "Wrong ID. " << std::endl;
-	}
+		std::cout << "Wrong id number!" << std::endl;
+
 }
 
 void Phonebook::search(void)
 {
 	std::string	input;
 
-	if (id > 0)
-		printContact(-1);
+	if (this->id > 0 || this->id_flag == 1)
+		printAllContact();
 	else
 	{
 		std::cout << "Phonebook is empty !" << std::endl;
@@ -138,7 +139,7 @@ void Phonebook::search(void)
 	std::cout << "Please enter the contact id. " << std::endl;
 	getline(std::cin, input);
 	if (input != "")
-		printContact(atoi(input.c_str()));
+			displayContactInfo(atoi(input.c_str()));
 	else
 		std::cout << "Wrong id number!" << std::endl;
 }
