@@ -1,5 +1,5 @@
-NAME = megaphone
-SRCS = megaphone.cpp
+NAME = zombie
+SRCS = *.cpp
 CC = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98
 
@@ -9,8 +9,10 @@ $(NAME): $(SRCS)
 	$(CC) $(FLAGS) $(SRCS) -o $(NAME)
 
 clean:
-	rm $(NAME)
+	rm -f $(NAME)
 
 fclean: clean
 
 re: fclean all
+
+.PHONY: clean fclean all
