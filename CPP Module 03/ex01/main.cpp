@@ -5,7 +5,7 @@ int main ()
 	ScavTrap serif("serif");
 	ScavTrap cagri("cagri");
 
-	serif.attack("güllü");
+	serif.attack("ali");
 	serif.takeDamage(20);
 	cagri = serif;
 	std::cout << cagri.getHitPoints() << std::endl;
