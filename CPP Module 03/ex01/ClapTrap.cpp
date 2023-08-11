@@ -2,23 +2,23 @@
 
 ClapTrap::ClapTrap()
 {
-	std::cout << "Default constructor called" << std::endl;
+	std::cout << "ClapTrap default constructor called" << std::endl;
 }
 
 ClapTrap::ClapTrap(std::string name): name(name), hitPoints(10), energyPoints(10), attackDamage()
 {
-	std::cout << "Name constructor called" << std::endl;
+	std::cout << "ClapTrap name constructor called" << std::endl;
 }
 
 ClapTrap::ClapTrap(const ClapTrap &copy)
 {
-	std::cout << "Copy constructor called" << std::endl;
+	std::cout << "ClapTrap copy constructor called" << std::endl;
 	*this = copy;
 }
 
 ClapTrap& ClapTrap::operator = (const ClapTrap &r)
 {
-	std::cout << "Copy assigment constructor called" << std::endl;
+	std::cout << "ClapTrap copy assigment constructor called" << std::endl;
 	this->name = r.name;
 	this->energyPoints = r.energyPoints;
 	this->attackDamage = r.attackDamage;
@@ -28,7 +28,7 @@ ClapTrap& ClapTrap::operator = (const ClapTrap &r)
 
 ClapTrap::~ClapTrap()
 {
-	std::cout << "Destructor called" << std::endl;
+	std::cout << "ClapTrap destructor called" << std::endl;
 }
 
 void ClapTrap::attack(const std::string &target)
@@ -75,4 +75,19 @@ void ClapTrap::beRepaired(unsigned int amount)
 		<< " repaired and " << this->name << " has " << this->hitPoints
 			<< " hit points" << std::endl;
 	this->energyPoints--;
+}
+
+int ClapTrap::getHitPoints()
+{
+	return (this->hitPoints);
+}
+
+int ClapTrap::getEnergyPoints()
+{
+	return (this->energyPoints);
+}
+
+int ClapTrap::getAttackDamage()
+{
+	return (this->attackDamage);
 }
