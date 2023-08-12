@@ -9,7 +9,7 @@ Fixed::Fixed()
 Fixed::Fixed(const Fixed &cpyFixed)
 {
 	std::cout << "Copy constructor called" << std::endl;
-	this->fixed_point_number = cpyFixed.fixed_point_number;
+	*this = cpyFixed;
 }
 
 Fixed &Fixed::operator=(const Fixed &cpy)

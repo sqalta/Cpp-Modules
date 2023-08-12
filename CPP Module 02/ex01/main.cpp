@@ -16,5 +16,12 @@ int main( void )
 	std::cout << "b is " << b.toInt() << " as integer" << std::endl;
 	std::cout << "c is " << c.toInt() << " as integer" << std::endl;
 	std::cout << "d is " << d.toInt() << " as integer" << std::endl;
+
+	float serif = 12.15f;
+
+	float raw = serif * (1 << 8);
+
+	int reel = raw / (1 << 8);
+	std::cout << (float)reel << std::endl;
 	return 0;
 }
