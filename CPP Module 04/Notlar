@@ -1,0 +1,9 @@
+Abstract class -> Abstract classlar soyut sınıflardır. 
+->Kendileri bir nesne oluşturamazken miras verdiği sınıflar virtual olarak işaretlenmiş fonksiyonları override edebilir. 
+->Bu egzersizde biz tam olarak bir soyut sınıf oluşturmuyoruz aslında. 
+Eğer Animal sınıfının virtual olarak belirlenmiş fonksiyonuna bir tanımlama yapmayıp, fonksiyonu "0"'a eşitlersek biz Animal
+sınıfından yeni bir nesne oluşturamıyoruz. Ancak miras verdiği Dog ve Cat sınıflarından animal classında kullanılan Virtual yani
+sanal işaretlenmiş fonksiyonları kullanabiliyoruz.
+
+
+ex02-> yıkıcı metodu virtual tanımlayıp daha alt sınıflarda override ediyoruz. Bu sayede delete ile herhangi bir alt sınıf delete ile silindiğinde tüm destructorlar çalışıyor.
