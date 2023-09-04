@@ -22,9 +22,9 @@ class Form
 		Form &operator = (const Form &copy);
 
 		bool getIsSigned();
-		 std::string getName() const;
-		 int getGradeToSign() const;
-		 int getGradeToExecute() const;
+		std::string getName() const;
+		int getGradeToSign() const;
+		int getGradeToExecute() const;
 		void beSigned(const Bureaucrat &b);
 
 		class GradeTooHighException : public std::exception
