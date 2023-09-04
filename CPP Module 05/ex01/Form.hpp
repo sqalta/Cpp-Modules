@@ -9,8 +9,8 @@ class Bureaucrat;
 class Form
 {
 	private:
-		const std::string name;
 		bool isSigned;
+		const std::string name;
 		const int requiredToSign;
 		const int requiredToExecute;
 
@@ -37,5 +37,7 @@ class Form
 			const char *what() const throw();
 		};
 };
+
+std::ostream &operator << (std::ostream &os, const Form &r);
 
 #endif

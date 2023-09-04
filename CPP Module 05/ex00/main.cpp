@@ -19,7 +19,7 @@ int main()
 	{
 		std::cerr << e.what() << std::endl;
 	}
-	Bureaucrat b3("palta", 150);
+	Bureaucrat b3("palta", 149);
 	try
 	{
 		b3.decrementGrade();

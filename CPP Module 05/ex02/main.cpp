@@ -6,18 +6,38 @@
 
 int main()
 {
-	PresidentialPardonForm form1("tot");
-
-	Bureaucrat b1("serif", 46);
-
+	AForm *f = new RobotomyRequestForm("serif");
+	AForm *f1 = new ShrubberyCreationForm("ali");
+	AForm *f2 = new PresidentialPardonForm("palta");
+	Bureaucrat s("Bureaucrat", 3);
+	s.signForm(*f);
+	s.signForm(*f1);
+	s.signForm(*f2);
+	getchar();
 	try
 	{
-		form1.beSigned(b1);
-		form1.execute(b1);
+		f->execute(s);
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
-	
+	getchar();
+	try
+	{
+		f1->execute(s);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	getchar();
+	try
+	{
+		f2->execute(s);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
 }
