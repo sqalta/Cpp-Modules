@@ -1,10 +1,10 @@
-NAME	= Bureaucrat
+NAME	= Base
 
-SOURCES	= main.cpp Bureaucrat.cpp
+SOURCES	= main.cpp A.cpp B.cpp C.cpp Base.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
-CC		= c++ 
+CC		= c++ -g
 FLAGS	= -Wall -Wextra -Werror -std=c++98
 
 all: $(NAME)

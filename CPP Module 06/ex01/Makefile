@@ -1,6 +1,6 @@
-NAME	= Intern
+NAME	= Serializer
 
-SOURCES	= main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp PresidentialPardonForm.cpp Intern.cpp
+SOURCES	= main.cpp Serializer.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 
@@ -10,7 +10,7 @@ FLAGS	= -Wall -Wextra -Werror -std=c++98
 all: $(NAME)
 
 $(NAME): $(OBJECTS)
-	$(CC) $(FLAGS)  -o $(NAME) $(OBJECTS)
+	$(CC) $(FLAGS) -o $(NAME) $(OBJECTS)
 
 .cpp.o:
 	$(CC) $(FLAGS) -c $< -o ${<:.cpp=.o}

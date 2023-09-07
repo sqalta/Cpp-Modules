@@ -118,7 +118,7 @@ void ScalarConversion::printChar(float arg, char s, int flag1)
 		std::cout << "'" << s << "'" << std::endl;
 		return ;
 	}
-	if (std::isnan(arg))
+	if (isnan(arg))
 	{
 		std::cout << "impossible" << std::endl;
 		return;
