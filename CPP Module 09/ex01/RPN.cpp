@@ -26,46 +26,79 @@ void removeSpaces(std::string &str)
 	str.erase(end_pos, str.end());
 }
 
-int Rpn::tokenizer()
+int Rpn::checkArg(std::string &prompt)
 {
-	std::pair<std::string, std::string> element;
-
-	int i = 0;
-	while (this->prompt[i])
+	int i = -1;
+	while (prompt[++i])
 	{
-		if (!std::isdigit(this->prompt[i]) && (!std::strchr( "+-/*", this->prompt[i])))
-			return 1;
-		element.first = this->prompt[i];
-		if (std::strchr( "+-/*", this->prompt[i]))
-			element.second = "operator";
-		else
-			element.second = "digit";
-		this->tokens.insert(element);
+		if (std::isdigit(prompt[i]) || std::strchr("+ - / *", prompt[i]))
+			continue;
+		return (1);
 	}
+	return(0);
+}
+
+//stack boş ise kontrol et!!!
+int Rpn::updateStack(char c)
+{
+	int num1;
+	int num2;
+
+	if (this->stackNumber.size() < 2)
+	{
+		std::cout << "There are not enough operands for the operator." << std::endl;
+		return -1;
+	}
+	num1 = this->stackNumber.top();
+	this->stackNumber.pop();
+	num2 = this->stackNumber.top();
+	this->stackNumber.pop();
+    if (c == '+')
+        this->stackNumber.push(num2 + num1);
+    else if (c == '-')
+        this->stackNumber.push(num2 - num1);
+    else if (c == '*')
+        this->stackNumber.push(num2 * num1);
+    else
+        this->stackNumber.push(num2 / num1);
 	return 0;
 }
 
-void Rpn::calculate()
+int Rpn::calculate()
 {
-	for (std::map<std::string, std::string>::iterator a = this->tokens.begin();
-				a != this->tokens.end(); a++)
+	int i = -1;
+	while (prompt[++i])
 	{
-		if (a->second == "digit")
-			this->stackNumber.push(std::atoi(a->first.c_str()));
-		else
+		if (std::strchr("+ - / *", prompt[i]))
 		{
-			
+			if (updateStack(prompt[i]))
+				return -1;
 		}
+		else
+			this->stackNumber.push(prompt[i] - '0');
 	}
+	return 0;
 }
 
 void Rpn::start()
 {
 	removeSpaces(this->prompt);
-	if (tokenizer())
+	if (checkArg(this->prompt))
 	{
-		std::cout << "Wrong input!" << std::endl;
+		std::cout << "Error!" << std::endl;
 		return ;
 	}
-	calculate();
+	if (calculate())
+		return ;
+	if (this->stackNumber.size() >= 2)
+	{
+		while (this->stackNumber.size() != 0)
+		{
+			std::cout << this->stackNumber.top() << " ";
+			this->stackNumber.pop();
+		}
+		std::cout << std::endl;
+	}
+	else
+		std::cout << this->stackNumber.top() << std::endl;
 }

@@ -5,7 +5,6 @@
 
 int main (int ac, char **av)
 {
-
 	if (ac == 2)
 	{
 		std::string input = av[1];
@@ -15,4 +14,3 @@ int main (int ac, char **av)
 	}
 	return 0;
 }
-

@@ -11,7 +11,6 @@ class Rpn
 	private:
 		std::string &prompt;
 		std::stack<int> stackNumber;
-		std::map<std::string, std::string> tokens;
 	public:
 		Rpn(std::string &input);
 		~Rpn();
@@ -19,8 +18,9 @@ class Rpn
 		Rpn(const Rpn &copy);
 
 		void start();
-		int tokenizer();
-		void calculate();
+		int checkArg(std::string &prompt);
+		int calculate();
+		int updateStack(char c);
 };
 
 
