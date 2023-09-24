@@ -35,25 +35,6 @@ void appendLine(std::map<std::string, float> &data, std::string line)
 	data.insert(newLine);
 }
 
-void BitcoinExchange::readData(std::string fileName)
-{
-	std::ifstream file;
-
-	file.open(fileName);
-
-	if (file.fail())
-	{
-		Error::fileError();
-	}
-	std::string line;
-	while (std::getline(file, line))
-	{
-		if (line == "date,exchange_rate")
-			continue;
-		appendLine(this->data, line);
-	}
-	file.close();
-};
 
 void BitcoinExchange::printData()
 {
@@ -104,6 +85,29 @@ int checkDate(std::string &date, std::string &line)
 	return 0;
 }
 
+std::string trim1(const std::string& str)
+{
+    size_t dotPos = str.find('.');
+    bool isDecimal = (dotPos != std::string::npos);
+
+    size_t firstNonZero = 0;
+    size_t lastNonZero = str.length() - 1;
+
+    while (firstNonZero <= lastNonZero && str[firstNonZero] == '0')
+        firstNonZero++;
+    while (lastNonZero > firstNonZero && str[lastNonZero] == '0')
+        lastNonZero--;
+    if (isDecimal)
+	{
+        size_t lastDigit = str.find_last_not_of('0');
+        if (lastDigit != std::string::npos && lastDigit > dotPos)
+            lastNonZero = lastDigit;
+        if (lastNonZero == dotPos + 1)
+            return str.substr(firstNonZero, dotPos - firstNonZero);
+    }
+    return str.substr(firstNonZero, lastNonZero - firstNonZero + 1);
+}
+
 std::string trim(const std::string& str, const std::string& trim)
 {
     size_t first = str.find_first_not_of(trim);
@@ -116,9 +120,11 @@ std::string trim(const std::string& str, const std::string& trim)
     return str.substr(first, last - first + 1);
 }
 
-int checkValue(std::string &value, std::string &line)
+int checkValue(std::string value, std::string &line)
 {
-	value = trim(value, "0");
+	value = trim1(value);
+	if (value[0] == '.')
+		value = "0" + value;
 	try
 	{
 		float fValue = std::stof(value);
@@ -152,7 +158,7 @@ int checkValue(std::string &value, std::string &line)
 }
 
 
-int checkLine(std::string &line)
+int BitcoinExchange::checkLine(std::string &line)
 {
 	if (line.find("|") == std::string::npos)
 		return Error::badInputError(line);
@@ -164,52 +170,66 @@ int checkLine(std::string &line)
 		return 1;
 	if (checkValue(value, line))
 		return 1;
+	this->inputDate = date;
+	this->inputValue = std::stof(value);
 	return 0;
 }
-//üst tarihe ayarlanmadı!!!!!!!
-std::map<std::string, float>::iterator findTrueDate(std::string &line, std::map<std::string, float> data)
+
+int daysSinceEpoch(const std::string& dateStr)
 {
-	std::map<std::string, float>::iterator trueDate;
-	int min = std::numeric_limits<int>::max();
-	int diff;
-	for (std::map<std::string, float>::iterator a = data.begin(); a != data.end(); a++)
-	{
-		diff = std::atoi(a->first.substr(0,4).c_str()) - std::atoi(line.substr(0,4).c_str());
-		if (diff < min)
-		{
-			min = diff;
-			trueDate = a;
-		}
-	}
-	min = std::numeric_limits<int>::max();
-	for (std::map<std::string, float>::iterator a = trueDate;
-				!std::strcmp(a->first.substr(0,4).c_str(), trueDate->first.substr(0,4).c_str()); a++)
-	{
-		diff = std::strcmp(a->first.substr(5,2).c_str(), line.substr(5,2).c_str());
-		if (diff < min)
-		{
-			min = diff;
-			trueDate = a;
-		}
-	}
-	for (std::map<std::string, float>::iterator a = trueDate;
-				!std::strcmp(a->first.substr(5,2).c_str(), trueDate->first.substr(5,2).c_str()); a++)
-	{
-		diff = std::strcmp(a->first.substr(8,2).c_str(), line.substr(8,2).c_str());
-		if (diff < min)
-		{
-			min = diff;
-			trueDate = a;
-		}
-	}
-	return trueDate;
+    struct tm timeStruct = {};
+    std::istringstream dateStream(dateStr);
+    dateStream >> std::get_time(&timeStruct, "%Y-%m-%d");
+
+    std::time_t timeSinceEpoch = std::mktime(&timeStruct);
+
+    if (timeSinceEpoch == -1) {
+        return -1;
+    }
+
+    int days = timeSinceEpoch / (60 * 60 * 24);
+    return days;
 }
 
-void calculateExchange(std::string &line, std::map<std::string, float> data)
+std::map<int, std::pair<std::string, float> > createDayVector(std::map<std::string, float> data)
 {
-	getchar();
-	std::cout << findTrueDate(line, data)->first << std::endl;
-	exit (1);
+	std::map<int, std::pair<std::string, float> >  ret;
+	std::pair<int, std::pair<std::string, float> > element;
+
+	for(std::map<std::string, float>::iterator a = data.begin(); a != data.end(); a++)
+	{
+		element.first = daysSinceEpoch(a->first);
+		element.second = *a;
+		ret.insert(element);
+	}
+	return ret;
+}
+
+void BitcoinExchange::calculateExchange (std::map<int, std::pair<std::string, float> > dataDay)
+{
+	int day = daysSinceEpoch(this->inputDate);
+	std::string trueDate;
+	float		price;
+	if (day < dataDay.begin()->first)
+	{
+		price = 0;
+	}
+	else
+	{
+		int min = INT_MAX;
+		int diff;
+		for (std::map<int, std::pair<std::string, float> >::iterator a = dataDay.begin(); a != dataDay.end(); a++)
+		{
+			diff = day - a->first;
+			if (diff >= 0 && min > diff)
+			{
+				min = diff;
+				trueDate = a->second.first;
+				price = a->second.second;
+			}
+		}
+	}
+	std::cout << this->inputDate << " => " << this->inputValue << " = " << (this->inputValue * price) << std::endl;
 }
 
 void BitcoinExchange::startExchange(std::string inputFileName)
@@ -227,6 +247,27 @@ void BitcoinExchange::startExchange(std::string inputFileName)
 	{
 		if(checkLine(line))
 			continue;
-		calculateExchange(line, this->data);
+		calculateExchange(this->dataDay);
 	}
 }
+
+void BitcoinExchange::readData(std::string fileName)
+{
+	std::ifstream file;
+
+	file.open(fileName);
+
+	if (file.fail())
+	{
+		Error::fileError();
+	}
+	std::string line;
+	while (std::getline(file, line))
+	{
+		if (line == "date,exchange_rate")
+			continue;
+		appendLine(this->data, line);
+	}
+	file.close();
+	this->dataDay = createDayVector(this->data);
+};
