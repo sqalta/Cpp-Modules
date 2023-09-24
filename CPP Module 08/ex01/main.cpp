@@ -29,7 +29,17 @@ int main()
 	{
 		std::cerr << e.what() << '\n';
 	}
-	
+	getchar();
+	std::vector<int> vect;
 
-	return 0;
+	srand(time(NULL));
+	for (int i = 0; i < 10000; i++)
+	{
+		vect.push_back(i);
+	}
+	Span sp1(10000);
+
+	sp1.addTestNumbers(vect.begin(), vect.end());
+
+	std::cout << sp1 << std::endl;
 }

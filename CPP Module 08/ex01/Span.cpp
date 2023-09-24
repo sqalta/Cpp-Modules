@@ -41,6 +41,17 @@ void Span::addNumber(int number)
 	}
 };
 
+void Span::addTestNumbers(std::vector<int>::iterator begin, std::vector<int>::iterator last)
+{
+	while (begin != last)
+	{
+		if (this->numbers.size() > this->N)
+			throw CapacityFullException();
+		this->numbers.push_back(*begin);
+		begin++;
+	}
+};
+
 int Span::longestSpan()
 {
 	std::vector<int>::iterator maxElements = std::max_element(this->numbers.begin(), this->numbers.end());
@@ -66,10 +77,6 @@ int Span::shortestSpan()
 	return min;
 };
 
-//void Span::addTestNumbers(int size)
-//{
-//};
-
 const char* Span::VectorIsEmptyException::what() const throw()
 {
 	return "Vector is empty!";
@@ -79,3 +86,23 @@ const char* Span::CapacityFullException::what() const throw()
 {
 	return "The vector's capacity is full.";
 };
+
+int Span::getN()
+{
+	return this->N;
+}
+
+std::vector<int> Span::getNumbers()
+{
+	return this->numbers;
+}
+
+std::ostream& operator << (std::ostream &of, Span &r)
+{
+	const std::vector<int>& numbers = r.getNumbers();
+	for (std::vector<int>::const_iterator it = numbers.begin(); it != numbers.end(); ++it)
+	{
+	    of << *it << std::endl;
+	}
+	return of;
+}

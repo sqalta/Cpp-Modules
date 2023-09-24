@@ -28,11 +28,14 @@ class Span
 			public:
 				virtual const char* what() const throw();
 		};
+		int getN();
+		std::vector<int> getNumbers();
 		int longestSpan();
 		int shortestSpan();
 
 		void addNumber(int number);
-		//void addTestNumbers(int size);
+		void addTestNumbers(std::vector<int>::iterator begin, std::vector<int>::iterator last);
 };
 
+std::ostream& operator << (std::ostream &of, Span &r);
 #endif
