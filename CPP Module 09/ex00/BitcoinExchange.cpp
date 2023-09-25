@@ -60,8 +60,11 @@ int getMonthDays(int year, int month)
         return 31;
 }
 
+//kontrol et!!!
 int checkDate(std::string &date, std::string &line)
 {
+	if (date.size() != 10)
+		return Error::badInputError(line);
 	for (int i = 0; date[i]; i++)
 	{
 		if ((i == 4 || i == 7))
