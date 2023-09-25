@@ -19,13 +19,13 @@ PmergeMe::~PmergeMe()
 PmergeMe::PmergeMe(const PmergeMe &copy)
 {
 	this->vct = copy.vct;
-	this->lst = copy.lst;
+	this->dqe = copy.dqe;
 };
 
 PmergeMe& PmergeMe::operator=(const PmergeMe &copy)
 {
 	this->vct = copy.vct;
-	this->lst = copy.lst;
+	this->dqe = copy.dqe;
 	return (*this);
 };
 
@@ -44,14 +44,14 @@ bool checkArg(int ac, char **av)
     return true;
 }
 
-int initList(char **av, int ac, std::list<int> &vct)
+int initList(char **av, int ac, std::deque<int> &dqe)
 {
     for (int i = 1; i < ac; i++)
     {
         try
         {
             int nbr = std::stoi(av[i]);
-            vct.push_back(nbr);
+            dqe.push_back(nbr);
         }
         catch (const std::invalid_argument &)
         {
@@ -121,7 +121,8 @@ void mergeVct(std::vector<int> &arr, int left, int middle, int right) {
     int i = 0, j = 0, k = left;
     while (i < n1 && j < n2)
 	{
-        if (leftArray[i] <= rightArray[j]) {
+        if (leftArray[i] <= rightArray[j])
+		{
             arr[k] = leftArray[i];
             i++;
         }
@@ -163,8 +164,6 @@ int mergeSortWithInsertionVct(std::vector<int> &arr, int left, int right) {
 	return 0;
 }
 
-
-
 bool PmergeMe::startSortVector(int ac)
 {
 	if (!checkArg(ac, this->prompt))
@@ -174,109 +173,83 @@ bool PmergeMe::startSortVector(int ac)
 	}
 	if (initVector(this->prompt, ac, this->vct))
 		return false;
-	if (mergeSortWithInsertionVct(this->vct, 0, this->vct.size() - 1))
-		return false;
-	printVect(this->vct);
+	// if (mergeSortWithInsertionVct(this->vct, 0, this->vct.size() - 1))
+	// 	return false;
 	return true;
 }
 
+void insertionSortDeque(std::deque<int> &arr, int left, int right) {
+    for (int i = left + 1; i <= right; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= left && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
 
-void mergeLst(std::list<int> &arr, int left, int middle, int right)
-{
-    std::list<int>::iterator leftIter = arr.begin();
-    std::advance(leftIter, left);
-
-    std::list<int>::iterator middleIter = arr.begin();
-    std::advance(middleIter, middle + 1);
-
-    std::list<int>::iterator rightIter = arr.begin();
-    std::advance(rightIter, right + 1);
-
-    std::list<int> leftList(leftIter, middleIter);
-    std::list<int> rightList(middleIter, rightIter);
-
-    leftIter = leftList.begin();
-    rightIter = rightList.begin();
-
-    while (leftIter != leftList.end() && rightIter != rightList.end())
-	{
-        if (*leftIter <= *rightIter) {
-            *leftIter = *rightIter;
-            ++leftIter;
+void mergeDeque(std::deque<int> &arr, int left, int middle, int right) {
+    int n1 = middle - left + 1;
+    int n2 = right - middle;
+    std::deque<int> leftDeque, rightDeque;
+    for (int i = 0; i < n1; i++)
+        leftDeque.push_back(arr[left + i]);
+    for (int j = 0; j < n2; j++)
+        rightDeque.push_back(arr[middle + 1 + j]);
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (leftDeque[i] <= rightDeque[j]) {
+            arr[k] = leftDeque[i];
+            i++;
         } else {
-            ++rightIter;
+            arr[k] = rightDeque[j];
+            j++;
         }
+        k++;
     }
-
-    leftIter = arr.begin();
-    std::advance(leftIter, left);
-
-    rightIter = leftList.begin();
-    while (rightIter != leftList.end())
-	{
-        *leftIter = *rightIter;
-        ++leftIter;
-        ++rightIter;
+    while (i < n1) {
+        arr[k] = leftDeque[i];
+        i++;
+        k++;
+    }
+    while (j < n2) {
+        arr[k] = rightDeque[j];
+        j++;
+        k++;
     }
 }
 
-void PmergeMe::insertionSortLst(int left, int right) {
-    if (lst.empty() || left >= right) {
-        return;
-    }
-
-    std::list<int>::iterator begin = lst.begin();
-    std::advance(begin, left);
-
-    std::list<int>::iterator end = lst.begin();
-    std::advance(end, right + 1);
-
-    for (std::list<int>::iterator current = begin; current != end; ++current) {
-        int key = *current;
-        std::list<int>::iterator j = current;
-        --j;
-
-        while (j != lst.begin() && *j > key) {
-            std::iter_swap(j, std::next(j, 1));
-            --current;
-            --j;
-        }
-
-        *std::next(j, 1) = key;
-    }
-}
-
-int PmergeMe::mergeSortWithInsertionLst(std::list<int> &arr, int left, int right) {
+int mergeSortWithInsertionDeque(std::deque<int> &arr, int left, int right) {
     int n = right - left + 1;
-    if (n >= 3)
-	{
+    if (n >= 3) {
         int third = n / 3;
         int leftThird = left + third - 1;
         int rightThird = left + 2 * third - 1;
-	 	mergeSortWithInsertionLst(arr, left, leftThird);
-        mergeSortWithInsertionLst(arr, leftThird + 1, rightThird);
-        mergeSortWithInsertionLst(arr, rightThird + 1, right);
-        mergeLst(arr, left, leftThird, rightThird);
-        mergeLst(arr, left, rightThird, right);
-    }
-	else
-        insertionSortLst(left, right);
+        mergeSortWithInsertionDeque(arr, left, leftThird);
+        mergeSortWithInsertionDeque(arr, leftThird + 1, rightThird);
+        mergeSortWithInsertionDeque(arr, rightThird + 1, right);
+        mergeDeque(arr, left, leftThird, rightThird);
+        mergeDeque(arr, left, rightThird, right);
+    } else
+        insertionSortDeque(arr, left, right);
 	return 0;
-} 
+}
 
-bool PmergeMe::startSortList(int ac)
+bool PmergeMe::startSortDeque(int ac)
 {
 	if (!checkArg(ac, this->prompt))
 	{
 		std::cout << "Error" << std::endl;
 		return false;
 	}
-	if (initList(this->prompt, ac, this->lst))
+	if (initList(this->prompt, ac, dqe))
 		return false;
-	if (mergeSortWithInsertionLst(this->lst, 0, this->lst.size() - 1))
+	if (mergeSortWithInsertionDeque(dqe, 0, this->dqe.size() - 1))
 		return false;
-	for (std::list<int>::iterator a = this->lst.begin(); a != this->lst.end(); a++)
-		std::cout << *a << std::endl;
+	// for (std::deque<int>::iterator a = dqe.begin(); a != dqe.end(); a++)
+	// 	std::cout << *a << std::endl;
 	return true;
 }
 

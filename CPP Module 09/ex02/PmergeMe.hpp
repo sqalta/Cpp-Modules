@@ -4,13 +4,14 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <deque>
 
 class PmergeMe
 {
 	private:
 		char **prompt;
 		std::vector<int> vct;
-		std::list<int> lst;
+		std::deque<int> dqe;
 	public:
 		PmergeMe();
 		PmergeMe(char **av);
@@ -19,9 +20,8 @@ class PmergeMe
 		PmergeMe& operator=(const PmergeMe &copy);
 
 		bool startSortVector(int ac);
-		bool startSortList(int ac);
-		void insertionSortLst(int left, int right);
+		bool startSortDeque(int ac);
 		void listMergeSort(int left, int right);
-		int mergeSortWithInsertionLst(std::list<int> &arr, int left, int right);
+		int	mergeSortWithInsertionLst(std::list<int> &arr, int left, int right);
 };
 #endif
