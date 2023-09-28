@@ -5,6 +5,7 @@
 #include <stack>
 #include <vector>
 #include <map>
+#include <string.h>
 
 class Rpn
 {

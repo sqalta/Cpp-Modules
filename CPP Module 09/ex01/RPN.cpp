@@ -38,7 +38,6 @@ int Rpn::checkArg(std::string &prompt)
 	return(0);
 }
 
-//stack boş ise kontrol et!!!
 int Rpn::updateStack(char c)
 {
 	int num1;
@@ -80,8 +79,29 @@ int Rpn::calculate()
 	return 0;
 }
 
+int cntrolSpaces(std::string &prompt)
+{
+	char *str = new char[prompt.size() + 1];
+    strcpy(str, prompt.c_str());
+
+	char *token = strtok(str, " ");
+
+	while (token != NULL)
+	{
+		if (strlen(token) != 1)
+			return 1;
+		token = strtok(NULL, " - ");
+	}
+	return 0;
+}
+
 void Rpn::start()
 {
+	if (cntrolSpaces(this->prompt))
+	{
+		std::cout << "Error!" << std::endl;
+		return ;
+	}
 	removeSpaces(this->prompt);
 	if (checkArg(this->prompt))
 	{
